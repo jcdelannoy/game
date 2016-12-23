@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// open GL
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -45,7 +44,6 @@ int main()
         fprintf(stderr, "Failed to initialize GLEW.");
         return EXIT_FAILURE;
     }
-
     glViewport(0, 0, screenWidth, screenHeight);
 
     while (!glfwWindowShouldClose(window))
