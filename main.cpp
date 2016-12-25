@@ -8,6 +8,12 @@
 // GLFW
 #include <GLFW/glfw3.h>
 
+// audio headers
+#include <Windows.h>
+#include <mmsystem.h>
+
+const GLint WIDTH = 640, HEIGHT = 480;
+
 const GLchar* vertexShaderSource = "#version 330 core\n"
 "layout ( location = 0 ) in vec3 position;\n"
 "void main( )\n"
@@ -130,6 +136,7 @@ int main()
     glBindVertexArray(0);
 
     // main loop.
+	PlaySound(TEXT("./audioFiles/testViolin.wav"), NULL, SND_FILENAME);
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
