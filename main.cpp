@@ -8,6 +8,9 @@
 // GLFW
 #include <GLFW/glfw3.h>
 
+#include <Windows.h>
+#include <mmsystem.h>
+
 const GLint WIDTH = 640, HEIGHT = 480;
 
 const GLchar* vertexShaderSource = "#version 330 core\n"
@@ -132,6 +135,7 @@ int main()
     glBindVertexArray(0);
 
     // main loop.
+	PlaySound(TEXT("./audioFiles/testViolin.wav"), NULL, SND_FILENAME);
     while (!glfwWindowShouldClose(window))
     {
         // check if any events have been activated and call handlers.
