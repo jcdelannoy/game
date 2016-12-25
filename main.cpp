@@ -8,8 +8,6 @@
 // GLFW
 #include <GLFW/glfw3.h>
 
-const GLint WIDTH = 640, HEIGHT = 480;
-
 const GLchar* vertexShaderSource = "#version 330 core\n"
 "layout ( location = 0 ) in vec3 position;\n"
 "void main( )\n"
@@ -24,10 +22,11 @@ const GLchar* fragmentShaderSource = "#version 330 core\n"
 "color = vec4( 1.0f, 0.5f, 0.2f, 1.0f );\n"
 "}";
 
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
+
 int main()
 {
-    // init GLFW - an open source, multi-platform library for OpenGL, OpenGL ES and Vulkan dev.
-    // It proves an API for creating windows, contexts and surfaces, receiving input and events.
+    // init GLFW.
     if (!glfwInit())
     {
         fprintf(stderr, "GLFW failed to initialize.");
@@ -39,9 +38,8 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);    
-    //glfwWindowHint(GLFW_SAMPLES, 4);
 
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Game", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Game", nullptr, nullptr);
 
     int screenWidth, screenHeight;
     glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
@@ -52,10 +50,11 @@ int main()
         return EXIT_FAILURE;
     }
     glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, keyCallback);
 
-    // init GLEW - OpenGL Extension Wrangler.
-    // It provides efficient run-time mechanims for determining which OpenGL extensions are supported on the target platform.
-    glewExperimental = GL_TRUE;
+    // init GLEW.
+    // user modern techniques for managing OpenGL functionality.
+    glewExperimental = GL_TRUE; 
     if (glewInit() != GLEW_OK)
     {
         fprintf(stderr, "Failed to initialize GLEW.");
@@ -106,7 +105,6 @@ int main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    // define a triangle.
     GLfloat vertices[] =
     {
         -0.5f, -0.5f, 0.0f, // bottom left
@@ -134,7 +132,6 @@ int main()
     // main loop.
     while (!glfwWindowShouldClose(window))
     {
-        // check if any events have been activated and call handlers.
         glfwPollEvents();
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -152,8 +149,15 @@ int main()
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
 
-    // clear any resources allocated by GLFW.
     glfwTerminate();
     return EXIT_SUCCESS;
+}
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
 }
 
