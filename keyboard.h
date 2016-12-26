@@ -1,13 +1,13 @@
 #pragma once
 #include <Windows.h>
 
-class keyBoard
+class KeyBoard
 {
     HKL keyBoardLayoutId;
 public:
-    keyBoard();
-    ~keyBoard();
-    void getLayout();
+    KeyBoard();
+    ~KeyBoard();
+
     bool isPressed(char x);
 };
 

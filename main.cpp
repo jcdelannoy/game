@@ -19,36 +19,10 @@
 // keyboard inputs
 #include "keyboard.h"
 
-const GLint WIDTH = 640, HEIGHT = 480;
-
-const GLchar* vertexShaderSource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 position;\n"
-"layout (location = 1) in vec3 color;\n"
-"out vec3 ourColor;\n"
-"void main( )\n"
-"{\n"
-"gl_Position = vec4( position.x, position.y, position.z, 1.0 );\n"
-"ourColor = color;\n"
-"}";
-
-const GLchar* fragmentShaderSource = 
-"#version 330 core\n"
-"in vec3 ourColor;\n"
-"out vec4 color;\n"
-"void main( )\n"
-"{\n"
-"color = vec4(ourColor, 1.0f);\n"
-"}";
-bool was_q_pressed = false;
-
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
-bool IsKeyPressed(char x);
 
 int main()
 {
-    keyBoard keyboard;
-    keyboard.getLayout();
     // init GLFW.
     if (!glfwInit())
     {
@@ -76,7 +50,7 @@ int main()
     glfwSetKeyCallback(window, keyCallback);
 
     // init GLEW.
-    // user modern techniques for managing OpenGL functionality.
+    // use modern techniques for managing OpenGL functionality.
     glewExperimental = GL_TRUE; 
     if (glewInit() != GLEW_OK)
     {
@@ -85,51 +59,10 @@ int main()
     }
     glViewport(0, 0, screenWidth, screenHeight);
 
-    Shader ourShader("default.vs", "default.frag");
+    // compile the default shader.
+    Shader defaultShader("default.vs", "default.frag");
 
-    // compile vertex shader - handles the processing of individual vertices.
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    GLint success;
-    GLchar infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        fprintf(stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED");
-        fprintf(stderr, infoLog);
-    }
-
-    // setup fragment shader - the pipeline stage after a primitive is rasterized.
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        fprintf(stderr, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
-        fprintf(stderr, infoLog);
-    }
-
-    // link shaders into shader program.
-    GLuint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        fprintf(stderr, "ERROR::SHADER::PROGRAM::LINKING_FAILED");
-        fprintf(stderr, infoLog);
-    }
-
-    // no longer need the vertex & fragment shaders, as they are now part of the compiled program.
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
+    // setup vertex data and attribute pointers.
     GLfloat vertices[] =
     {
         // positions            // colors
@@ -159,8 +92,9 @@ int main()
     // cleanup.
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-  MSG message;
-  message.message = WM_NULL;
+
+    KeyBoard keyboard;
+
     // main loop.
     while (!glfwWindowShouldClose(window))
     {
@@ -169,20 +103,19 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // activate the shader.
-        glUseProgram(shaderProgram);
-
-        // draw the vertices.
+        // draw the vertices.q
+        defaultShader.use();
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
-    if (keyboard.isPressed('q')) {
-        PlaySound(TEXT("./audioFiles/testViolin.wav"), NULL, SND_FILENAME | SND_ASYNC);
-    }
-
-
+    
         // swap screen buffers.
         glfwSwapBuffers(window);
+
+        if (keyboard.isPressed('q'))
+        {
+            PlaySound(TEXT("./audioFiles/testViolin.wav"), NULL, SND_FILENAME | SND_ASYNC);
+        }
     }
 
     glDeleteVertexArrays(1, &VAO);
