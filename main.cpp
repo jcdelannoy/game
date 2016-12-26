@@ -12,6 +12,9 @@
 #include <Windows.h>
 #include <mmsystem.h>
 
+// keyboard inputs
+#include "keyboard.h"
+
 const GLint WIDTH = 640, HEIGHT = 480;
 
 const GLchar* vertexShaderSource = "#version 330 core\n"
@@ -27,11 +30,15 @@ const GLchar* fragmentShaderSource = "#version 330 core\n"
 "{\n"
 "color = vec4( 1.0f, 0.5f, 0.2f, 1.0f );\n"
 "}";
+bool was_q_pressed = false;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
+bool IsKeyPressed(char x);
 
 int main()
 {
+    keyBoard keyboard;
+    keyboard.getLayout();
     // init GLFW.
     if (!glfwInit())
     {
@@ -134,9 +141,10 @@ int main()
     // cleanup.
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
+	MSG message;
+	message.message = WM_NULL;
     // main loop.
-	PlaySound(TEXT("./audioFiles/testViolin.wav"), NULL, SND_FILENAME);
+	// SND_NOSTOP: to play multiple audiofiles at the same time. 
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -148,6 +156,10 @@ int main()
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
+		if (keyboard.isPressed('q')) {
+				PlaySound(TEXT("./audioFiles/testViolin.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		}
+
 
         // swap screen buffers.
         glfwSwapBuffers(window);
