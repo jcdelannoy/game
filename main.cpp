@@ -16,6 +16,9 @@
 #include <Windows.h>
 #include <mmsystem.h>
 
+// keyboard inputs
+#include "keyboard.h"
+
 const GLint WIDTH = 640, HEIGHT = 480;
 
 const GLchar* vertexShaderSource =
@@ -37,11 +40,15 @@ const GLchar* fragmentShaderSource =
 "{\n"
 "color = vec4(ourColor, 1.0f);\n"
 "}";
+bool was_q_pressed = false;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
+bool IsKeyPressed(char x);
 
 int main()
 {
+    keyBoard keyboard;
+    keyboard.getLayout();
     // init GLFW.
     if (!glfwInit())
     {
@@ -152,7 +159,8 @@ int main()
     // cleanup.
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
+  MSG message;
+  message.message = WM_NULL;
     // main loop.
     while (!glfwWindowShouldClose(window))
     {
@@ -168,6 +176,10 @@ int main()
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
+    if (keyboard.isPressed('q')) {
+        PlaySound(TEXT("./audioFiles/testViolin.wav"), NULL, SND_FILENAME | SND_ASYNC);
+    }
+
 
         // swap screen buffers.
         glfwSwapBuffers(window);
