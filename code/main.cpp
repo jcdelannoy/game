@@ -59,7 +59,7 @@ int main()
     glViewport(0, 0, WIDTH, HEIGHT);
 
     // compile the default shader.
-    Shader ourShader("default.vert", "default.frag");
+    Shader ourShader("code\\shaders\\default.vert", "code\\shaders\\default.frag");
 
     // setup vertex data and attribute pointers
     GLfloat vertices[] = {
@@ -198,8 +198,8 @@ int main()
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
         GLfloat radius = 10.0f;
-        GLfloat camX = sin(glfwGetTime()) * radius;
-        GLfloat camZ = cos(glfwGetTime()) * radius;
+        GLfloat camX = ((GLfloat)sin(glfwGetTime())) * radius;
+        GLfloat camZ = ((GLfloat)cos(glfwGetTime())) * radius;
         view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         projection = glm::perspective(glm::radians(45.0f), ((GLfloat)WIDTH) / ((GLfloat)HEIGHT), 0.1f, 100.0f);
 
