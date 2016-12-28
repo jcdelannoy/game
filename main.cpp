@@ -59,7 +59,7 @@ int main()
     glViewport(0, 0, WIDTH, HEIGHT);
 
     // compile the default shader.
-    Shader ourShader("default.vs", "default.frag");
+    Shader ourShader("default.vert", "default.frag");
 
     // setup vertex data and attribute pointers
     GLfloat vertices[] = {
