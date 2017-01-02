@@ -1,15 +1,22 @@
 #pragma once
 #include <Windows.h>
+#include <GLFW/glfw3.h>
+#include <stdio.h>
+
 class KeyBoard
 {
-    static const unsigned int numberOfKeys = 256U;
-    bool previousKeyboardState[numberOfKeys];
-    HKL keyBoardLayoutId;
+    bool* isPressed;
+    bool* wasPressed;
+
 public:
     KeyBoard();
     ~KeyBoard();
 
-    bool isPressed(char x);
+    short getKeyIndex(short keyGLFWid);
+    void keyCallback(GLFWwindow* window, int keyGLFWid, int scancode, int action, int mode);
+    bool KeyBoard::keyIsPressed(short keyGLFWid);
+    bool KeyBoard::keyWasPressed(short keyGLFWid);
 };
+
 
 

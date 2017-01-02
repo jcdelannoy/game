@@ -25,6 +25,16 @@
 // keyboard inputs
 #include "keyboard.h"
 
+HANDLE loadResource(LPSTR lpName) {
+    HANDLE hRes;
+    hRes = LoadResource(NULL, FindResource(NULL, lpName, "WAVE"));
+    if (hRes == NULL)
+        return NULL;
+    return hRes;
+}
+
+
+
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -46,6 +56,9 @@ int main()
 
     GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Game", nullptr, nullptr);
     glfwMakeContextCurrent(window);
+    // define the keyboard.
+    KeyBoard keyboard;
+    glfwSetWindowUserPointer(window, &keyboard);
     glfwSetKeyCallback(window, keyCallback);
 
     // init GLEW.
@@ -168,12 +181,12 @@ int main()
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    // create the keyboard.
-    KeyBoard keyboard;
+
 
     // Game loop
     while (!glfwWindowShouldClose(window))
     {
+
         glfwPollEvents();
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -221,11 +234,14 @@ int main()
 
         // swap screen buffers.
         glfwSwapBuffers(window);
-
-        if (keyboard.isPressed('q'))
-        {
+        if (keyboard.keyIsPressed(GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(window, GL_TRUE);
+        if (keyboard.keyIsPressed(GLFW_KEY_Q) && !keyboard.keyWasPressed(GLFW_KEY_Q)) {
             PlaySound(TEXT("./data/audioFiles/testViolin.wav"), NULL, SND_FILENAME | SND_ASYNC);
         }
+
+
+
+
     }
     // Properly de-allocate all resources once they've outlived their purpose
     glDeleteVertexArrays(1, &VAO);
@@ -236,10 +252,9 @@ int main()
     return 0;
 }
 
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+    KeyBoard * keyboard = reinterpret_cast<KeyBoard *>(glfwGetWindowUserPointer(window));
+    keyboard->keyCallback(window, key, scancode, action, mode);
 }
+

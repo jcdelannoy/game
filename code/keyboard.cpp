@@ -3,22 +3,47 @@
 
 KeyBoard::KeyBoard()
 {
-    KeyBoard::keyBoardLayoutId = GetKeyboardLayout(0);
+    // inquire -999 to get number of keys
+    short numKeys = KeyBoard::getKeyIndex(-999);
+    KeyBoard::isPressed = new bool[numKeys];
+    KeyBoard::wasPressed = new bool[numKeys];
+
+    for (int i = 0; i < numKeys; i++) {
+        KeyBoard::isPressed[i] = FALSE;
+        KeyBoard::wasPressed[i] = FALSE;
+    }
 }
 
 KeyBoard::~KeyBoard()
 {
+    delete [] KeyBoard::isPressed;
+    delete [] KeyBoard::wasPressed;
 }
-static const unsigned int NumberOfKeys = 256U;
 
-bool previousKeyboardState[NumberOfKeys];
+short KeyBoard::getKeyIndex(short keyGLFWid) {
+    if (keyGLFWid == -999) return 2; //RETURN NUMBER OF KEYS
+    if (keyGLFWid == GLFW_KEY_ESCAPE) return 0;
+    if (keyGLFWid == GLFW_KEY_Q) return 1;
+    return -999; //NOT DEFINED
+}
 
-
-bool KeyBoard::isPressed(char x)
+void KeyBoard::keyCallback(GLFWwindow* window, int keyGLFWid, int scancode, int action, int mode)
 {
-    short keyId;
-    keyId = VkKeyScanEx(x, KeyBoard::keyBoardLayoutId);
-    // is_pressed will be true if the key is currently being held down
-    bool justPressed = (GetAsyncKeyState(keyId) & 0x8001) != 0;
-    return (justPressed);
+    short keyIndex = KeyBoard::getKeyIndex(keyGLFWid); //get keyIndex
+    if (keyIndex == -999) return; //NOT DEFINED
+
+    //  update keyState
+    KeyBoard::wasPressed[keyIndex] = KeyBoard::isPressed[keyIndex];
+    if (action == GLFW_PRESS) KeyBoard::isPressed[keyIndex] = TRUE;
+    else KeyBoard::isPressed[keyIndex] = FALSE;
+}
+
+bool KeyBoard::keyIsPressed(short keyGLFWid) {
+    short keyIndex = KeyBoard::getKeyIndex(keyGLFWid); //get keyIndex
+    return KeyBoard::isPressed[keyIndex];
+}
+
+bool KeyBoard::keyWasPressed(short keyGLFWid) {
+    short keyIndex = KeyBoard::getKeyIndex(keyGLFWid); //get keyIndex
+    return KeyBoard::wasPressed[keyIndex];
 }
