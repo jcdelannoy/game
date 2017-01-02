@@ -111,11 +111,6 @@ int main()
     
         // swap screen buffers.
         glfwSwapBuffers(window);
-
-        if (keyboard.isPressed('q'))
-        {
-            PlaySound(TEXT("./audioFiles/testViolin.wav"), NULL, SND_FILENAME | SND_ASYNC);
-        }
     }
 
     glDeleteVertexArrays(1, &VAO);
@@ -130,6 +125,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+    if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+    {
+        PlaySound(TEXT("./audioFiles/testViolin.wav"), NULL, SND_FILENAME | SND_ASYNC);
     }
 }
 
