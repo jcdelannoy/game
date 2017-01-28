@@ -128,14 +128,33 @@
   <ItemGroup>
     <None Include="code\shaders\default.frag" />
     <None Include="code\shaders\default.vert" />
+    <None Include="code\shaders\particle.frag" />
+    <None Include="code\shaders\particle.vert" />
+    <None Include="code\shaders\postProcessing.frag" />
+    <None Include="code\shaders\postProcessing.vert" />
+    <None Include="code\shaders\sprite.frag" />
+    <None Include="code\shaders\sprite.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code\game.h" />
+    <ClInclude Include="code\gameLevel.h" />
+    <ClInclude Include="code\gameObject.h" />
     <ClInclude Include="code\keyboard.h" />
+    <ClInclude Include="code\resourceManager.h" />
     <ClInclude Include="code\shader.h" />
+    <ClInclude Include="code\spriteRenderer.h" />
+    <ClInclude Include="code\texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="code\game.cpp" />
+    <ClCompile Include="code\gameLevel.cpp" />
+    <ClCompile Include="code\gameObject.cpp" />
     <ClCompile Include="code\keyboard.cpp" />
     <ClCompile Include="code\main.cpp" />
+    <ClCompile Include="code\resourceManager.cpp" />
+    <ClCompile Include="code\shader.cpp" />
+    <ClCompile Include="code\spriteRenderer.cpp" />
+    <ClCompile Include="code\texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

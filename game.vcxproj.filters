@@ -24,6 +24,24 @@
     <None Include="code\shaders\default.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="code\shaders\particle.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="code\shaders\particle.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="code\shaders\postProcessing.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="code\shaders\postProcessing.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="code\shaders\sprite.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="code\shaders\sprite.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\keyboard.h">
@@ -32,12 +50,51 @@
     <ClInclude Include="code\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="code\resourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\spriteRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\gameLevel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\gameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code\keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="code\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\resourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\spriteRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\gameLevel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\gameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
