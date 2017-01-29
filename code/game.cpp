@@ -6,7 +6,7 @@
 #include "spriteRenderer.h"
 
 SpriteRenderer* renderer;
-GameObject* paddle;
+GameObject* player;
 
 // forward declarations.
 GLboolean CheckCollision(GameObject& one, GameObject& two);
@@ -23,7 +23,7 @@ Game::Game(GLuint width, GLuint height) :
 Game::~Game()
 {
     delete renderer;
-    delete paddle;
+    delete player;
  }
 
 void Game::Init()
@@ -53,12 +53,7 @@ void Game::Init()
     renderer = new SpriteRenderer(spriteShader);
 
     // load textures.
-    ResourceManager::LoadTexture("data\\img\\background.jpg", GL_FALSE, "background");
-    ResourceManager::LoadTexture("data\\img\\awesomeface.png", GL_TRUE, "face");
-    ResourceManager::LoadTexture("data\\img\\block.png", GL_FALSE, "block");
-    ResourceManager::LoadTexture("data\\img\\block_solid.png", GL_FALSE, "block_solid");
-    ResourceManager::LoadTexture("data\\img\\awesomeface.png", GL_TRUE, "paddle");
-    ResourceManager::LoadTexture("data\\img\\particle.png", GL_TRUE, "particle");
+    ResourceManager::LoadTexture("data\\img\\awesomeface.png", GL_TRUE, "player");
  
     // load levels.
     GameLevel one;
@@ -79,10 +74,10 @@ void Game::Init()
     four.Load("data\\levels\\four.lvl", levelWidth, levelHeight);
     mLevels.push_back(four);
 
-    // create paddle.
-    Texture2D paddleTex = ResourceManager::GetTexture("paddle");
+    // create player.
+    Texture2D paddleTex = ResourceManager::GetTexture("player");
     glm::vec2 paddlePos = glm::vec2((this->width - PADDLE_SIZE.x) * 0.5f, this->height - PADDLE_SIZE.y);
-    paddle = new GameObject(paddlePos, PADDLE_SIZE, paddleTex);
+    player = new GameObject(paddlePos, PADDLE_SIZE, paddleTex);
  }
 
 void Game::Update(GLfloat dt)
@@ -90,25 +85,45 @@ void Game::Update(GLfloat dt)
     DoCollisions();
  }
 
-void Game::ProcessInput(GLfloat dt)
+void Game::ProcessInput(GLfloat dt, KeyBoard* keyboard)
 {
     if (this->state == GAME_ACTIVE)
     {
         GLfloat velocity = PADDLE_VELOCITY * dt;
         
-        // move paddle.
-        if (this->keys[GLFW_KEY_A])
+        // process inputs to move the avatar.
+        if (keyboard != nullptr)
         {
-            if (paddle->mPosition.x >= 0)
+            if (keyboard->keyIsPressed(GLFW_KEY_A))
             {
-                paddle->mPosition.x -= velocity;
+                if (player->mPosition.x >= 0)
+                {
+                    player->mPosition.x -= velocity;
+                }
             }
-        }
-        if (this->keys[GLFW_KEY_D])
-        {
-            if (paddle->mPosition.x <= this->width - paddle->mSize.x)
-            { 
-                paddle->mPosition.x += velocity;
+
+            if (keyboard->keyIsPressed(GLFW_KEY_D))
+            {
+                if (player->mPosition.x <= this->width - player->mSize.x)
+                {
+                    player->mPosition.x += velocity;
+                }
+            }
+
+            if (keyboard->keyIsPressed(GLFW_KEY_W))
+            {
+                if (player->mPosition.y >= 0)
+                {
+                    player->mPosition.y -= velocity;
+                }
+            }
+
+            if (keyboard->keyIsPressed(GLFW_KEY_S))
+            {
+                if (player->mPosition.y <= this->height - player->mSize.y)
+                {
+                    player->mPosition.y += velocity;
+                }
             }
         }
     }
@@ -125,8 +140,8 @@ void Game::Render()
         // draw level.
         mLevels[mLevelIdx].Draw(*renderer);
 
-        // draw paddle.
-        paddle->Draw(*renderer);
+        // draw player.
+        player->Draw(*renderer);
     }
 }
 
@@ -154,8 +169,8 @@ void Game::ResetLevel()
 
 void Game::ResetPlayer()
 {
-    paddle->mSize = PADDLE_SIZE;
-    paddle->mPosition = glm::vec2((this->width * 0.5f) - (PADDLE_SIZE.x * 0.5f), this->height - PADDLE_SIZE.y);
+    player->mSize = PADDLE_SIZE;
+    player->mPosition = glm::vec2((this->width * 0.5f) - (PADDLE_SIZE.x * 0.5f), this->height - PADDLE_SIZE.y);
 }
 
 GLboolean ShouldSpawn(GLuint chance)

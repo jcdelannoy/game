@@ -9,6 +9,7 @@
 
 #include "gameLevel.h"
 #include "gameObject.h"
+#include "keyboard.h"
 
 enum GameState
 {
@@ -27,7 +28,7 @@ enum Direction
 
 typedef std::tuple<GLboolean, Direction, glm::vec2> Collision;
 
-const glm::vec2 PADDLE_SIZE(100.0f, 20.0f);
+const glm::vec2 PADDLE_SIZE(100.0f, 100.0f);
 const GLfloat PADDLE_VELOCITY(500.0f);
 
 class Game
@@ -43,7 +44,7 @@ class Game
         ~Game();
 
         void Init();
-        void ProcessInput(GLfloat dt);
+        void ProcessInput(GLfloat dt, KeyBoard* keyboard);
         void Update(GLfloat dt);
         void Render();
         void DoCollisions();

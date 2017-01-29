@@ -6,20 +6,22 @@
 
 #include "game.h"
 #include "resourceManager.h"
+#include "keyboard.h"
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
-const GLuint SCREEN_WIDTH = 800;
-const GLuint SCREEN_HEIGHT = 600;
+const GLuint SCREEN_WIDTH = 1024;
+const GLuint SCREEN_HEIGHT = 768;
+Game game(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-HANDLE loadResource(LPSTR lpName) {
+HANDLE loadResource(LPSTR lpName) 
+{
     HANDLE hRes;
     hRes = LoadResource(NULL, FindResource(NULL, lpName, "WAVE"));
     if (hRes == NULL)
         return NULL;
     return hRes;
 }
-
 
 int main(int argc, char* argv[])
 {
@@ -31,16 +33,15 @@ int main(int argc, char* argv[])
 
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Game", nullptr, nullptr);
     glfwMakeContextCurrent(window);
+    
     // define the keyboard.
-    KeyBoard keyboard;
-    glfwSetWindowUserPointer(window, &keyboard);
+    KeyBoard* keyboard = new KeyBoard();
+    glfwSetWindowUserPointer(window, keyboard);
     glfwSetKeyCallback(window, keyCallback);
 
     glewExperimental = GL_TRUE;
     glewInit();
     glGetError(); // glewInit() always causes an innocuous error.
-
-    glfwSetKeyCallback(window, keyCallback);
 
     // opengl configuation.
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -63,7 +64,7 @@ int main(int argc, char* argv[])
 
         // process user input.
         deltaTime = 0.002f;
-        game.ProcessInput(deltaTime);
+        game.ProcessInput(deltaTime, keyboard);
 
         // update game.
         game.Update(deltaTime);
@@ -74,43 +75,47 @@ int main(int argc, char* argv[])
         game.Render();
 
         glfwSwapBuffers(window);
-        if (keyboard.keyIsPressed(GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(window, GL_TRUE);
-        if (keyboard.keyIsPressed(GLFW_KEY_Q) && !keyboard.keyWasPressed(GLFW_KEY_Q)) {
+
+        // keyboard processing.
+        if (keyboard->keyIsPressed(GLFW_KEY_ESCAPE))
+        {
+            glfwSetWindowShouldClose(window, GL_TRUE);
+        }
+        
+        if (keyboard->keyIsPressed(GLFW_KEY_Q) && !(keyboard->keyWasPressed(GLFW_KEY_Q))) 
+        {
             PlaySound(TEXT("./data/audioFiles/testViolin.wav"), NULL, SND_FILENAME | SND_ASYNC);
         }
-
-
-
-
     }
-    // Terminate GLFW, clearing any resources allocated by GLFW.
+
+    ResourceManager::Clear();
     glfwTerminate();
     return EXIT_SUCCESS;
 }
 
-//void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode) 
-//{
-//    KeyBoard * keyboard = reinterpret_cast<KeyBoard *>(glfwGetWindowUserPointer(window));
-//    keyboard->keyCallback(window, key, scancode, action, mode);
-//}
-
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode) 
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-
-    if (key >= 0 && key < 1024)
-    {
-        if (action == GLFW_PRESS)
-        {
-            game.keys[key] = GL_TRUE;
-        }
-        else if (action == GLFW_RELEASE)
-        {
-            game.keys[key] = GL_FALSE;
-        }
-    }
+    KeyBoard* keyboard = reinterpret_cast<KeyBoard*>(glfwGetWindowUserPointer(window));
+    keyboard->keyCallback(window, key, scancode, action, mode);
 }
+
+//void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
+//{
+//    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+//    {
+//        glfwSetWindowShouldClose(window, GL_TRUE);
+//    }
+//
+//    if (key >= 0 && key < 1024)
+//    {
+//        if (action == GLFW_PRESS)
+//        {
+//            game.keys[key] = GL_TRUE;
+//        }
+//        else if (action == GLFW_RELEASE)
+//        {
+//            game.keys[key] = GL_FALSE;
+//        }
+//    }
+//}
 
