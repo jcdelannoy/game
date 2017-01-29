@@ -54,6 +54,7 @@ void Game::Init()
 
     // load textures.
     ResourceManager::LoadTexture("data\\img\\awesomeface.png", GL_TRUE, "player");
+    ResourceManager::LoadTexture("data\\img\\ground96x72_01.png", GL_TRUE, "ground_tile_01");
  
     // load levels.
     GameLevel one;
@@ -61,18 +62,6 @@ void Game::Init()
     GLuint levelHeight = (GLuint)(this->height * 0.5f);
     one.Load("data\\levels\\one.lvl", levelWidth, levelHeight);
     mLevels.push_back(one);
-    
-    GameLevel two;
-    two.Load("data\\levels\\two.lvl", levelWidth, levelHeight);
-    mLevels.push_back(two);
-
-    GameLevel three;
-    three.Load("data\\levels\\three.lvl", levelWidth, levelHeight);
-    mLevels.push_back(three);
-
-    GameLevel four;
-    four.Load("data\\levels\\four.lvl", levelWidth, levelHeight);
-    mLevels.push_back(four);
 
     // create player.
     Texture2D paddleTex = ResourceManager::GetTexture("player");
@@ -152,18 +141,6 @@ void Game::ResetLevel()
     if (mLevelIdx == 0)
     {
         mLevels[0].Load("data\\levels\\one.lvl", levelWidth, levelHeight);
-    }
-    else if (mLevelIdx == 1)
-    {
-        mLevels[1].Load("data\\levels\\two.lvl", levelWidth, levelHeight);
-    }
-    else if (mLevelIdx == 2)
-    {
-        mLevels[2].Load("data\\levels\\three.lvl", levelWidth, levelHeight);
-    }
-    else if (mLevelIdx == 3)
-    {
-        mLevels[3].Load("data\\levels\\four.lvl", levelWidth, levelHeight);
     }
 }
 

@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 void GameLevel::Load(const GLchar* file, GLuint levelWidth, GLuint levelHeight)
 {
@@ -14,6 +15,7 @@ void GameLevel::Load(const GLchar* file, GLuint levelWidth, GLuint levelHeight)
     std::string line;
     std::ifstream fstream(file);
     std::vector<std::vector<GLuint>> tileData;
+
     if (fstream)
     {
         while (std::getline(fstream, line))
@@ -29,8 +31,15 @@ void GameLevel::Load(const GLchar* file, GLuint levelWidth, GLuint levelHeight)
 
         if (tileData.size() > 0)
         {
-            this->Init(tileData, levelWidth, levelHeight);
+            // jc(todo): do not hardcode.
+            GLuint tileWidth = 96;
+            GLuint tileHeight = 72;
+            this->Init(tileData, 96, 72, levelWidth, levelHeight);
         }
+    }
+    else
+    {
+        std::cout << "ERROR::GameLevel:: Could not find level: " << file << "\n" << std::endl;
     }
 }
 
@@ -58,49 +67,49 @@ GLboolean GameLevel::IsCompleted()
     return GL_TRUE;
 }
 
-void GameLevel::Init(std::vector<std::vector<GLuint>> tileData, GLuint levelWidth, GLuint levelHeight)
+void GameLevel::Init(std::vector<std::vector<GLuint>> tileData, GLuint tileWidth, GLuint tileHeight, GLuint levelWidth, GLuint levelHeight)
 {
     GLuint height = tileData.size();
     GLuint width = tileData[0].size();
-    GLfloat unitWidth = levelWidth / static_cast<GLfloat>(width);
-    GLfloat unitHeight = (GLfloat)(levelHeight / height);
+    //GLfloat unitWidth = levelWidth / static_cast<GLfloat>(width);
+    //GLfloat unitHeight = (GLfloat)(levelHeight / height);
     for (GLuint y = 0; y < height; ++y)
     {
         for (GLuint x = 0; x < width; ++x)
         {
-            if (tileData[y][x] == 1) // Solid
+            if (tileData[y][x] >= 1)
             {
-                glm::vec2 pos(unitWidth * x, unitHeight * y);
-                glm::vec2 size(unitWidth, unitHeight);
-                Texture2D texture = ResourceManager::GetTexture("block_solid");
-                GameObject gameObject(pos, size, texture, glm::vec3(0.8f, 0.8f, 0.7f));
+                glm::vec2 pos(tileWidth * x, tileHeight * y);
+                glm::vec2 size(tileWidth, tileHeight);
+                Texture2D texture = ResourceManager::GetTexture("ground_tile_01");
+                GameObject gameObject(pos, size, texture);
                 gameObject.mIsSolid = GL_TRUE;
                 mBricks.push_back(gameObject);
             }
-            else if (tileData[y][x] > 1)
-            {
-                glm::vec3 color = glm::vec3(1.0f); // original: white
-                if (tileData[y][x] == 2)
-                {
-                    color = glm::vec3(0.2f, 0.6f, 1.0f);
-                }
-                else if (tileData[y][x] == 3)
-                {
-                    color = glm::vec3(0.0f, 0.7f, 0.0f);
-                }
-                else if (tileData[y][x] == 4)
-                {
-                    color = glm::vec3(0.8f, 0.8f, 0.4f);
-                }
-                else if (tileData[y][x] == 5)
-                {
-                    color = glm::vec3(1.0f, 0.5f, 0.0f);
-                }
+            //else if (tileData[y][x] > 1)
+            //{
+            //    glm::vec3 color = glm::vec3(1.0f); // original: white
+            //    if (tileData[y][x] == 2)
+            //    {
+            //        color = glm::vec3(0.2f, 0.6f, 1.0f);
+            //    }
+            //    else if (tileData[y][x] == 3)
+            //    {
+            //        color = glm::vec3(0.0f, 0.7f, 0.0f);
+            //    }
+            //    else if (tileData[y][x] == 4)
+            //    {
+            //        color = glm::vec3(0.8f, 0.8f, 0.4f);
+            //    }
+            //    else if (tileData[y][x] == 5)
+            //    {
+            //        color = glm::vec3(1.0f, 0.5f, 0.0f);
+            //    }
 
-                glm::vec2 pos(unitWidth * x, unitHeight * y);
-                glm::vec2 size(unitWidth, unitHeight);
-                mBricks.push_back(GameObject(pos, size, ResourceManager::GetTexture("block"), color));
-            }
+            //    glm::vec2 pos(unitWidth * x, unitHeight * y);
+            //    glm::vec2 size(unitWidth, unitHeight);
+            //    mBricks.push_back(GameObject(pos, size, ResourceManager::GetTexture("block"), color));
+            //}
         }
     }
 }

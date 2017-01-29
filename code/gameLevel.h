@@ -19,5 +19,5 @@ public:
     std::vector<GameObject> mBricks;
 
 private:
-    void Init(std::vector<std::vector<GLuint>> tileData, GLuint levelWidth, GLuint levelHeight);
+    void Init(std::vector<std::vector<GLuint>> tileData, GLuint tileWidth, GLuint tileHeight, GLuint levelWidth, GLuint levelHeight);
 };
