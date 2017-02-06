@@ -46,7 +46,7 @@ void KeyBoard::keyCallback(GLFWwindow* window, int keyGLFWid, int scancode, int 
 
     //  update keyState
     KeyBoard::wasPressed[keyIndex] = KeyBoard::isPressed[keyIndex];
-    if (action == GLFW_PRESS)
+    if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
         KeyBoard::isPressed[keyIndex] = TRUE;
     }
